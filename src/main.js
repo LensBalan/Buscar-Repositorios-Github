@@ -29,6 +29,9 @@ class App{
             return; //sempre sai da funcao
         }
 
+    this.apresentar_buscando();
+
+    try{
         let response = await api.get(`/repos/${input}`);
         //console.log(response);
 
@@ -43,9 +46,26 @@ class App{
         });
 
         this.renderizar_tela();
+
+    }catch(erro){
+        //limpar buncando
+        this.lista.removeChild(document.querySelector('.list-group-item-warning'));
+
+        //limpar erro existente
+        let error = this.lista.querySelector('.list-group-item-danger');
+
+        if(error !== null){
+            this.lista.removeChild(error);
+        }
+
+        let li = document.createElement('li');
+        li.setAttribute('class', 'list-group-item list-group-item-danger');
+        let txtErro = document.createTextNode(`O repositório ${input} não existe.`);
+        li.appendChild(txtErro);
+        this.lista.appendChild(li);
     }
 
-
+    }
 /*
 <li class="list-group-item list-group-item-action">
         <img src="https://avatars0.githubusercontent.com/u/8083459?v=4"/>
@@ -54,6 +74,15 @@ class App{
         <a target="_blank" href="https://github.com/ryanoasis/nerd-fonts">Acessar</a>
 </li>
 */
+    apresentar_buscando(){
+        let li = document.createElement('li');
+        li.setAttribute('class', 'list-group-item list-group-item-warning');
+        let txtBuscando = document.createTextNode(`Aguarde, Buscando o repositório...`);
+        li.appendChild(txtBuscando);
+        this.lista.appendChild(li);
+    }
+
+
     renderizar_tela(){
         //limpar o conteudo antigo
         this.lista.innerHTML = '';
